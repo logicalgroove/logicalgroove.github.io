@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Blog</title>
+    <meta name="description" content="Blog">
+    <meta name="author" content="Alex Lopez">
+
+    <link rel="stylesheet" href="css/milligram.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="row">
+        <div class="column">
+          <h3>Blog</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pretium, erat eu consequat tincidunt, lectus urna auctor odio, eu blandit urna leo a dui. Donec orci dui, pellentesque vitae urna non, pharetra consequat mauris. Suspendisse quis facilisis sem. Aenean iaculis, elit at ullamcorper volutpat, risus lectus rhoncus ipsum, eget porta nunc lacus et libero. In rhoncus felis eget eros suscipit, ornare consectetur erat accumsan. Donec sem quam, faucibus sed turpis ac, aliquam fermentum libero. Nullam maximus tincidunt lacus, sit amet auctor leo varius sed.</p>
+
+          <p>Nunc egestas ornare erat, et ullamcorper leo ornare et. Duis interdum laoreet ultrices. In non enim sapien. Fusce malesuada augue vitae metus tincidunt porta. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam maximus ipsum vitae porttitor molestie. Maecenas interdum lorem sit amet gravida rhoncus. Sed tempus lectus non dictum finibus. Aliquam lobortis elementum eros ac varius. Proin mollis, sem eget finibus dignissim, mauris lacus semper lorem, id rutrum risus sem vitae dui.</p>
+
+          <p>Vivamus volutpat mi in augue bibendum vulputate. In congue euismod porttitor. Duis porttitor ultricies nulla, a gravida erat rutrum in. Nulla at enim ut magna pulvinar aliquet. Vestibulum condimentum scelerisque nisi, eget finibus risus. Quisque vitae arcu arcu. Etiam pulvinar tristique volutpat. Aliquam leo lacus, malesuada vitae commodo non, sagittis sed sem. Donec convallis vitae risus ac malesuada.</p>
+
+          <pre><code>
+class EnqueueDailyEmailsForSubscribersWorker
+  include Sidekiq::Worker
+
+  def perform
+    Subscriber.
+      select(:id).
+      current_hour_by_time_zone.
+      confirmed.
+      last_emailed(22.hours.ago).
+      find_in_batches(batch_size: 1000) do |subscribers|
+
+      Sidekiq::Client.push_bulk(
+        "class" => "SendDailyEmailToSubscriberWorker",
+        "args" => subscribers.pluck(:id).map {|id| [id]}
+      )
+    end
+  end
+end
+          </code></pre>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- <script src="js/scripts.js"></script> -->
+  </body>
+</html>
